@@ -162,9 +162,19 @@ if media_type == 'movie':
 
 ## Запуск проекта
 
-1. Установите зависимости:
+1. Настройте venv и установите зависимости:
+Linux/MacOS:
 ```bash
-pip install django
+python3 -m venv .venv
+source .venv/bin/activate
+pip install -r requirements.txt
+```
+
+Windows
+```bash
+py -m venv .venv
+.venv/Scripts/activate
+pip install -r reuirements.txt
 ```
 
 2. Примените миграции:
