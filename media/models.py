@@ -40,11 +40,12 @@ class Book(BorrowableMixin, MediaItem):
         return "book"
 
 class Movie(DownloadableMixin, MediaItem):
-    duration = models.IntegerField()
+    duration = models.IntegerField(help_text="Длительность в минутах")
     format = models.CharField(max_length=10)
+    director = models.CharField(max_length=100)
 
     def get_description(self):  # полиморфизм
-        return f"Фильм '{self.title}' режиссера {self.creator}, {self.duration} мин."
+        return f"Фильм '{self.title}' режиссера {self.director}"
 
     def play_trailer(self):
         return f"Воспроизведение трейлера фильма '{self.title}'"

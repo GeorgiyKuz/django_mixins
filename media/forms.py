@@ -6,6 +6,7 @@ from .services import MediaFactory
 class MediaForm(forms.Form):
     MEDIA_TYPES = [
         ('book', 'Книга'),
+        ('movie', 'Фильм'),
         ('audiobook', 'Аудиокнига'),
     ]
 
@@ -22,9 +23,15 @@ class MediaForm(forms.Form):
     isbn = forms.CharField(max_length=20, required=False, label='ISBN')
     page_count = forms.IntegerField(required=False, label='Количество страниц', min_value=1)
 
+    # Общая длительность (используется для фильмов и аудиокниг)
+    duration = forms.IntegerField(required=False, label='Длительность (минуты)', min_value=1)
+
     # Поля для аудиокниг
     narrator = forms.CharField(max_length=100, required=False, label='Чтец')
-    audiobook_duration = forms.IntegerField(required=False, label='Длительность аудиокниги (минуты)', min_value=1)
+
+    # Поля для фильмов
+    format = forms.CharField(max_length=10, required=False, label='Формат')
+    director = forms.CharField(max_length=100, required=False, label='Режиссер')
 
     def __init__(self, *args, **kwargs):
         kwargs.pop('instance', None)
@@ -44,8 +51,16 @@ class MediaForm(forms.Form):
         elif media_type == 'audiobook':
             if not cleaned_data.get('narrator'):
                 self.add_error('narrator', 'Чтец обязателен для аудиокниг')
-            if not cleaned_data.get('audiobook_duration'):
-                self.add_error('audiobook_duration', 'Длительность обязательна для аудиокниг')
+            if not cleaned_data.get('duration'):
+                self.add_error('duration', 'Длительность обязательна для аудиокниг')
+
+        elif media_type == 'movie':
+            if not cleaned_data.get('duration'):
+                self.add_error('duration', 'Длительность обязательна для фильмов')
+            if not cleaned_data.get('format'):
+                self.add_error('format', 'Формат обязателен для фильмов')
+            if not cleaned_data.get('director'):
+                self.add_error('director', 'Режиссер обязателен для фильмов')
 
         return cleaned_data
 
@@ -67,8 +82,14 @@ class MediaForm(forms.Form):
             })
         elif media_type == 'audiobook':
             media_data.update({
-                'duration': self.cleaned_data['audiobook_duration'],
+                'duration': self.cleaned_data['duration'],
                 'narrator': self.cleaned_data['narrator']
+            })
+        elif media_type == 'movie':
+            media_data.update({
+                'duration': self.cleaned_data['duration'],
+                'format': self.cleaned_data['format'],
+                'director': self.cleaned_data['director']
             })
 
         # Используем фабрику для создания объекта

@@ -1,16 +1,27 @@
-from media.models import Book, AudioBook
+from media.models import Book, AudioBook, Movie
 
 
 class MediaFactory:
     @staticmethod
-    def create_media(media_type, **kwargs):
-        creators = {
+    def _creators():
+        return {
             'book': Book,
+            'movie': Movie,
             'audiobook': AudioBook,
         }
 
+    @staticmethod
+    def create_media(media_type, **kwargs):
+        creators = MediaFactory._creators()
         media_class = creators.get(media_type)
         if not media_class:
             raise ValueError(f"Неизвестный тип медиа: {media_type}")
-
         return media_class.objects.create(**kwargs)
+
+    @staticmethod
+    def get_media_class(media_type):
+        return MediaFactory._creators().get(media_type)
+
+    @staticmethod
+    def get_all_media_types():
+        return list(MediaFactory._creators().keys())

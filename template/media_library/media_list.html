@@ -46,8 +46,8 @@
                         <span class="badge bg-success media-badge">Фильм</span>
                         <h5 class="card-title">{{ movie.title }}</h5>
                         <p class="card-text">
-                            <small class="text-muted">Режиссер: {{ movie.creator }}</small><br>
-                            <small class="text-muted">Длительность: {{ movie.duration }} мин.</small>
+<small class="text-muted">Режиссер: {{ movie.director }}</small><br>
+                            <small class="text-muted">Длительность: {{ movie.duration }} мин.
                         </p>
                         <div class="action-buttons">
                             <a href="{% url 'media_library:media_detail' pk=movie.pk %}" class="btn btn-sm btn-outline-primary">Подробнее</a>

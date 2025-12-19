@@ -14,7 +14,7 @@
                 </span>
                 
                 <h1 class="card-title">{{ media_item.title }}</h1>
-                <p class="card-text"><strong>Автор/Режиссер:</strong> {{ media_item.creator }}</p>
+<p class="card-text"><strong>Автор/Режиссер:</strong> {% if media_type == 'movie' %}{{ media_item.director }}{% else %}{{ media_item.creator }}{% endif %}</p>
                 <p class="card-text"><strong>Дата публикации:</strong> {{ media_item.publication_date }}</p>
                 
                 <!-- Специфичные поля для каждого типа -->
@@ -25,9 +25,10 @@
                 <p class="card-text"><strong>Статус:</strong> <span class="badge bg-warning">В аренде у {{ media_item.borrowed_by }}</span></p>
                 {% endif %}
                 
-                {% elif media_type == 'movie' %}
+{% elif media_type == 'movie' %}
                 <p class="card-text"><strong>Длительность:</strong> {{ media_item.duration }} минут</p>
                 <p class="card-text"><strong>Формат:</strong> {{ media_item.format }}</p>
+                <p class="card-text"><strong>Режиссер:</strong> {{ media_item.director }}</p>
                 
                 {% elif media_type == 'audiobook' %}
                 <p class="card-text"><strong>Длительность:</strong> {{ media_item.duration }} минут</p>

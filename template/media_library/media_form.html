@@ -58,16 +58,22 @@
                     
                     <div id="movie-fields" style="display: none;">
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="{{ form.duration.id_for_label }}" class="form-label">Длительность (минуты)</label>
                                     {{ form.duration }}
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="mb-3">
                                     <label for="{{ form.format.id_for_label }}" class="form-label">Формат</label>
                                     {{ form.format }}
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="mb-3">
+                                    <label for="{{ form.director.id_for_label }}" class="form-label">Режиссер</label>
+                                    {{ form.director }}
                                 </div>
                             </div>
                         </div>

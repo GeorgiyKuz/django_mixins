@@ -4,7 +4,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView, TemplateView
 
 from .forms import MediaForm
-from .models import Book, AudioBook
+from .models import Book, AudioBook, Movie
 from .services import MediaFactory
 
 
@@ -14,13 +14,15 @@ class MediaListView(ListView):
 
     def get_queryset(self):
         books = list(Book.objects.all())
+        movies = list(Movie.objects.all())
         audiobooks = list(AudioBook.objects.all())
-        return books + audiobooks
+        return books + movies + audiobooks
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         # Группируем по типам для отображения
         context['books'] = Book.objects.all()
+        context['movies'] = Movie.objects.all()
         context['audiobooks'] = AudioBook.objects.all()
         return context
 
@@ -63,7 +65,7 @@ class MediaDetailView(DetailView):
         if hasattr(media_item, 'play_trailer'):
             actions.append(('play_trailer', 'Смотреть трейлер', 'btn-warning'))
 
-        if hasattr(media_item, 'borrow') and not media_item.is_borrowed:
+        if hasattr(media_item, 'borrow') and not getattr(media_item, 'is_borrowed', False):
             actions.append(('borrow', 'Взять в аренду', 'btn-success'))
 
         if hasattr(media_item, 'download'):
@@ -74,6 +76,8 @@ class MediaDetailView(DetailView):
     def get_media_type(self, media_item):
         if isinstance(media_item, Book):
             return 'book'
+        elif isinstance(media_item, Movie):
+            return 'movie'
         elif isinstance(media_item, AudioBook):
             return 'audiobook'
         return 'unknown'
@@ -108,6 +112,11 @@ def media_action(request, media_type, item_id):
             'read': lambda obj: obj.read_sample(),
             'borrow': lambda obj: obj.borrow(request.user.username if request.user.is_authenticated else 'Гость'),
             'download': lambda obj: "Книги недоступны для скачивания",
+        },
+        'movie': {
+            'describe': lambda obj: obj.get_description(),
+            'play_trailer': lambda obj: obj.play_trailer(),
+            'download': lambda obj: obj.download(),
         },
         'audiobook': {
             'describe': lambda obj: obj.get_description(),
